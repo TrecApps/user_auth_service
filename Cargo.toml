@@ -1,0 +1,21 @@
+[package]
+name = "server_two"
+version = "0.1.0"
+authors = ["John Jacko <jljacko@outlook.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+threadpool = "1.8.1" # Easy threadpooling
+oracle = "0.3.2"     # Allows us to connect to an Oracle Database
+
+# Allows use of BCrypt, pasword analyzing, password generation, etc.
+passwords = {version = "3.1.3", features = ["crypto"]}
+
+# allows use of the SCrypt Algorithm
+dumb-crypto = "3.1.0"
+
+# Add support for JWT, the means through which Tokens are format
+# simple_jwt = "1.2.1"

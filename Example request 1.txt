@@ -1,0 +1,12 @@
+
+GET /auth/oauth/authorize?response_type=code&client_id=R2dpxQ3vPrtfgF72&scope=user_info&state=ZG1lrA2MzaQigIQAKIjJ4YlFXhbXZEmyPO2Hmsa5aNs%3D&redirect_uri=http://localhost:8082/login/oauth2/code/ HTTP/1.1
+Host: localhost:7878
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://localhost:8082/
+DNT: 1
+Connection: keep-alive
+Cookie: jenkins-timestamper-offset=21600000; UISESSION=7572540FAB45D42AB74822641D47D935
+Upgrade-Insecure-Requests: 1
