@@ -2,6 +2,7 @@ extern crate threadpool;
 extern crate oracle;
 
 use std::net::TcpListener;
+use std::env;
 
 mod controller;
 mod user;
@@ -20,11 +21,21 @@ fn main() {
     
     // Create oracle connections
 
+    // First, retrieve the parameters from the Environment
+    let db_url = env.var("DB_URL").expect("Environment Variable 'DB_URL' not set!");
+    let db_url_2 = env.var("DB2_URL").expect("Environment Variable 'DB2_URL' not set!");
+
+    let db_username = env.var("DB_USERNAME").expect("Environment Variable 'DB_USERNAME' not set!");
+    let db_username_2 = env.var("DB2_USERNAME").expect("Environment Variable 'DB2_USERNAME' not set!");
+
+    let db_password = env.var("DB_PASSWORD").expect("Environment Variable 'DB_PASSWORD' not set!");
+    let db_password_2 = env.var("DB2_PASSWORD").expect("Environment Variable 'DB2_PASSWORD' not set!");
+
     unsafe
     {
-    MAIN_CONNECTION = Some(oracle::Connection::connect("", "", "").expect("Failed to Connect to the main Oracle Database"));
+    MAIN_CONNECTION = Some(oracle::Connection::connect(db_username, db_password, db_url).expect("Failed to Connect to the main Oracle Database"));
 
-    SALT_CONNECTION = Some(oracle::Connection::connect("username: U", "password: P", "connect_string: C")
+    SALT_CONNECTION = Some(oracle::Connection::connect(db_username_2, db_password_2, db_url_2)
         .expect("Failed to connect to the salt Oracle Database"));
 
     }

@@ -77,6 +77,10 @@
 		function validateSubmit() {
 			return userNameReady && passwordsMatch;
 		}
+
+		function setSecurityFeatures(element) {
+			document.getElementById("securityDiv").hidden = !element.checked;
+		}
 		
 		</script>
 	
@@ -97,6 +101,28 @@
 				<label>Confirm Password:</label>
 				<input required type="password" id="password2" oninput="comparePasswords()">
 				<h5 class="bg-danger" id="passWarning" hidden> Passwords must match and be 8+ characters in length!</h5>
+				
+
+				<!-- Detailed Security Features -->
+				<label>Customize Security Features</label>
+				<input type="checkbox" onclick="setSecurityFeatures(this)" checked>
+
+				<div id="securityDiv">
+					<label>Password Month Reset (Default 6):</label>
+					<input type="number" name="password_reset" value="6" max="12">
+
+					<label>Time (by 10 minutes) before locking account</label>
+					<input type="number" name="inactivity_count" value="3">
+
+					<label>Whether to time expiration from Login (false) or activity (true)</label>
+					<input type="checkbox" name="from_activity">
+
+					<label>Max Login Attempts per hour:</label>
+					<input type="number" name="max_logins" value="10" max="20">
+
+					<label>Time (by 10 minutes) to lock the account</label>
+					<input type="number" name="lock_time" value="6">
+				</div>
 				<input type="submit" class="btn btn=submit">
 			</form>
 			
