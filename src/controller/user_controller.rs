@@ -51,7 +51,7 @@ pub fn user_exists_get_mapping(request: &HttpRequest, conn:&oracle::Connection) 
 
         },
         Ok(res) => {
-            let mut response = HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::ServerErr500));
+            let mut response = HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::Success200));
             let key = String::from("Content-Type");
             let value = String::from("text/plain; charset=UTF-8");
             response.add_header(&key, &value);
