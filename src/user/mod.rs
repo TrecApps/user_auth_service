@@ -178,13 +178,14 @@ impl User
     {
         let params = [oracle::StmtParam::FetchArraySize(1)];
         let mut insert_statement =
-            conn.prepare("insert into users (username, main_email, trec_email, s_password, b_password, unlock_time, verify_code, verify_time,
+            conn.prepare("insert into users (id, username, main_email, trec_email, s_password, b_password, unlock_time, verify_code, verify_time,
             password_month_reset, client_time_restrict, client_time_from_activity, max_login_attempts_per_hour, login_lock_time) values (
                 :username, :main_email, :trec_email, :s_password, :b_password, :unlock_time, :verify_code, :verify_time,
                 :password_month_reset, :client_time_restrict, :client_time_from_activity, :max_login_attempts_per_hour, :login_lock_time
             )", &params).expect("Failed to prepare insert statement for user!");
 
-        let insert_result = insert_statement.execute_named(&[("username",&self.username),
+        let insert_result = insert_statement.execute_named(&[("id", &self.id),
+                                        ("username",&self.username),
                                         ("main_email",&self.main_email),
                                         ("trec_email",&self.trec_email),
                                         ("s_password",&self.s_password),

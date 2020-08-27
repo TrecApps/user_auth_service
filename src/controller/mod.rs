@@ -20,7 +20,24 @@ pub fn handle_request(mut stream: TcpStream, salt: &Option<oracle::Connection>, 
 {
     let mut buffer : String = String::from("");
 
-    stream.read_to_string(&mut buffer).unwrap();
+    println!("In handle_request, about to read the stream!");
+
+    let mut byteBuffer = [0;512];
+
+    loop {
+        let bytes_read = stream.read(&mut byteBuffer).unwrap();
+        if bytes_read == 0
+        {
+            break;
+        }
+        buffer.push_str(std::str::from_utf8(&mut byteBuffer).unwrap());
+
+        if bytes_read < 512
+        {
+            break;
+        }
+    }
+    println!("Read the Stream!");
 
     println!("\n-----------\n{}\n-------------\n", buffer);
 
@@ -53,6 +70,8 @@ fn sort_controller(request: &HttpRequest, salt: &oracle::Connection, user: & ora
 {
     let end_point = request.get_endpoint();
     let method = request.get_method();
+
+    println!("Sorting controller with endpoint '{}'", end_point);
 
     if end_point.eq(&String::from("/NewUser"))
     {

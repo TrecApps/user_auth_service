@@ -49,13 +49,24 @@ impl HttpRequest
 
     pub fn parse(contents: &String) -> Result<HttpRequest, String>
     {
-        let first_vec = helper_functions::split_string_n(contents, " ", 4);
 
+        let base_vec = helper_functions::split_string_n(contents, "\n", 2);
 
-        if first_vec.len() != 4
+        if base_vec.len() != 2
         {
             return Err(String::from("Improperly formed http request, attempt to parse the first line did not yield required attributes"));
         }
+
+        let first_vec = helper_functions::split_string_n(base_vec.get(0).unwrap(), " ", 3);
+
+        
+
+
+        if first_vec.len() != 3
+        {
+            return Err(String::from("Improperly formed http request, attempt to parse the first line did not yield required attributes"));
+        }
+        
 
         let method = first_vec.get(0).expect("Call to len did not work as expected");
 
@@ -66,7 +77,11 @@ impl HttpRequest
 
         let mappings = first_vec.get(1).expect("msg: &str");
 
+        println!("Mappings = {}", mappings);
+
         let mapping_vec = helper_functions::split_string_n(mappings, "?", 1);
+
+        println!("Got mapping vec!");
 
         let endpoint_opt = mapping_vec.get(0);
 
@@ -80,6 +95,7 @@ impl HttpRequest
 
         let empty_string = String::from("");
 
+        println!("About to get parameters!");
         let param_results = helper_functions::get_map_from_string(
             match mapping_vec.get(1)
             {
@@ -97,15 +113,18 @@ impl HttpRequest
 
         let version = first_vec.get(2).expect("msg: &str");
         
-        let headers_body = helper_functions::split_string_n(first_vec.get(3).unwrap(), "\n\n", 2);
+        let headers_body = helper_functions::split_string_n(base_vec.get(1).unwrap(), "\n\n", 2);
 
-        let header_string = match headers_body.get(0)
+        let mut header_string = match headers_body.get(0)
         {
             None => String::from(""),
             Some(string) => string.clone()
         };
 
-        let headers_opt = helper_functions::get_map_from_string(&header_string, " ", ":");
+
+        println!("Header String is {}", header_string);
+
+        let headers_opt = helper_functions::get_map_from_string(&header_string, "\n", ":");
 
         if headers_opt.is_none()
         {
