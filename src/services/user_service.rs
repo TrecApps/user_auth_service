@@ -99,8 +99,8 @@ pub fn enter_new_user(field_map: &HashMap<String, String>, conn: &oracle::Connec
     let b_salt = generate_random_string(32);
     let s_salt = generate_random_string(64);
 
-    let b_password = get_bcrypt_password(password.to_string(), b_salt);
-    let s_password = get_scrypt_password(password.to_string(), s_salt);
+    let b_password = get_bcrypt_password(password.to_string(), b_salt.to_string());
+    let s_password = get_scrypt_password(password.to_string(), s_salt.to_string());
 
     if b_password.is_err()
     {
@@ -133,15 +133,37 @@ pub fn enter_new_user(field_map: &HashMap<String, String>, conn: &oracle::Connec
         raw_max_logins,
         raw_lock_time
     );
-
-    new_user.set_id(available_id.unwrap());
+    let user_id = available_id.unwrap();
+    new_user.set_id(user_id);
 
     if new_user.insert_new_user(conn)
     {
+        // Table USER_SALTS: ID, S_SALT, B_SALT
+
         // To-Do: Add Salts to other table
+        let params = [oracle::StmtParam::FetchArraySize(1)];
+        let mut insert_salt = 
+            salt.prepare("insert into USER_SALTS (ID, S_SALT, B_SALT) values
+            (:id, :s_salt, :b_salt)", &params).
+            expect("Failed to create new salt insert sttement!");
+        
+        let insert_result = insert_salt.execute_named(&[("id", &user_id),
+                ("s_salt", &s_salt),("b_salt", &b_salt)]);
+
 
         // To-Do: figure out the appropriate success response
-        HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::Success200))
+        match insert_result
+        {
+            Ok(_) => HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::Success200)),
+            Err(_) => {
+                let mut res = HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::ServerErr500));
+                let key = String::from("Content-Type");
+                let value = String::from("text/plain; charset=UTF-8");
+                res.add_header(&key, &value);
+                res.set_body(String::from("Failed to Insert Salt Data to DB!"));
+                res
+            }
+        }
     }
     else
     {
