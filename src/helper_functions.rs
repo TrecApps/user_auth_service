@@ -62,7 +62,6 @@ pub fn get_map_from_string(contents: &String, entry_split: &str, key_value_split
         
 
         let (key, value) = (pair.get(0).expect("msg: &str"), pair.get(1).expect("msg: &str"));
-        // println!("Adding key-value as key ='{}', value ='{}'", key, value);
         ret.insert(key.clone(),value.clone());
     }
 

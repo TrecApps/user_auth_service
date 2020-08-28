@@ -1,12 +1,15 @@
 extern crate threadpool;
 extern crate oracle;
 
+extern crate rand;
+
 use std::net::TcpListener;
 use std::env;
 
 mod controller;
 mod user;
 mod client;
+mod services;
 
 pub mod err_string;
 

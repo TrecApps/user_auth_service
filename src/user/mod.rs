@@ -2,6 +2,8 @@ mod security_policy;
 
 use oracle::{Connection, ResultSet, Row, Statement};
 
+
+
 pub struct User
 {
     id: usize,
@@ -47,7 +49,12 @@ pub fn user_exists(username: &String, conn: &oracle::Connection) -> Result<bool,
 
 impl User
 {
-    fn new(username:String, main_email: String, trec_email: String, s_password: String,
+    pub fn set_id(&mut self, id: usize)
+    {
+        self.id = id;
+    }
+
+    pub fn new(username:String, main_email: String, trec_email: String, s_password: String,
          b_password: String, unlock_time: u64,verify_code: String, verify_time: u64) -> User
     {
         User {
@@ -68,7 +75,7 @@ impl User
         }
     }
 
-    fn new_secure(username:String, main_email: String, trec_email: String, s_password: String,
+    pub fn new_secure(username:String, main_email: String, trec_email: String, s_password: String,
         b_password: String, unlock_time: u64,verify_code: String, verify_time: u64,
         password_month_reset: u8, client_time_restrict: u8, client_time_from_activity: bool,
         max_login_attempts_per_hour: u8, login_lock_time: u8) -> User
@@ -91,7 +98,7 @@ impl User
        }
    }
 
-    fn get_user_by_id(conn: & oracle::Connection, id: usize) -> Result<User, String>
+    pub fn get_user_by_id(conn: & oracle::Connection, id: usize) -> Result<User, String>
     {
         let params = [oracle::StmtParam::FetchArraySize(1)];
         let prepare = conn.prepare("select * from users where id = :id", &params);
@@ -130,7 +137,7 @@ impl User
         )
     }
 
-    fn update_user(&self, conn: &oracle::Connection) -> bool
+    pub fn update_user(&self, conn: &oracle::Connection) -> bool
     {
         let params = [oracle::StmtParam::FetchArraySize(1)];
 
@@ -174,7 +181,7 @@ impl User
         }
     }
 
-    fn insert_new_user(&self, conn: &oracle::Connection) -> bool
+    pub fn insert_new_user(&self, conn: &oracle::Connection) -> bool
     {
         let params = [oracle::StmtParam::FetchArraySize(1)];
         let mut insert_statement =
@@ -207,7 +214,7 @@ impl User
         }
     }
 
-    fn get_avaiable_id(conn: &oracle::Connection) -> Result<usize, String>
+    pub fn get_avaiable_id(conn: &oracle::Connection) -> Result<usize, String>
     {
         let params = [oracle::StmtParam::FetchArraySize(1)];
         let prepare = conn.prepare("select max(id) from users", &params);

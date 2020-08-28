@@ -5,8 +5,13 @@ use crate::controller::http_response_code::HttpResponseCodeTypes;
 
 
 use crate::user;
+use crate::services::user_service;
+
+use crate::helper_functions;
 
 use std::fs;
+
+
 
 pub fn new_user_get_mapping(request: &HttpRequest, conn: &oracle::Connection) -> HttpResponse
 {
@@ -107,10 +112,44 @@ pub fn send_email_mapping(request: &HttpRequest, conn: &oracle::Connection) -> H
     HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::Success200))
 }
 
-pub fn new_user_post_mapping(request: &HttpRequest, conn: &oracle::Connection) -> HttpResponse
+pub fn new_user_post_mapping(request: &HttpRequest, conn: &oracle::Connection, salt: &oracle::Connection) -> HttpResponse
 {
+    let body = request.get_body_string();
 
-    HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::Success200))
+    let body_vec = helper_functions::split_string_n(&body, " ", 2);
+
+    let fields_str = body_vec.get(0);
+
+    match fields_str
+    {
+        None => {
+            let mut response = HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::ClientErr400));
+            let key = String::from("Content-Type");
+            let value = String::from("text/plain; charset=UTF-8");
+            response.add_header(&key, &value);
+            response.set_body(String::from("Expected Body"));
+            response
+        },
+        Some(fields) => {
+            let field_map = helper_functions::get_map_from_string(fields, "&", "=");
+
+            if field_map.is_some()
+            {
+                user_service::enter_new_user(&field_map.unwrap(), conn, salt)
+            }
+            else
+            {
+                let mut response = HttpResponse::new(HttpResponseCode::new(HttpResponseCodeTypes::ServerErr500));
+                let key = String::from("Content-Type");
+                let value = String::from("text/plain; charset=UTF-8");
+                response.add_header(&key, &value);
+                response.set_body(String::from("failed to generate mapt of parameters"));
+                response
+            }
+        }
+    }
+
+    
 }
 
 pub fn log_in_post_mapping(request: &HttpRequest, conn: &oracle::Connection) -> HttpResponse

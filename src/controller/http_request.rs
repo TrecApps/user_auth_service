@@ -47,6 +47,11 @@ impl HttpRequest
         self.headers.get(key)
     }
 
+    pub fn get_body_string(&self) -> String
+    {
+        self.body.clone()
+    }
+
     pub fn parse(contents: &String) -> Result<HttpRequest, String>
     {
 
@@ -77,11 +82,9 @@ impl HttpRequest
 
         let mappings = first_vec.get(1).expect("msg: &str");
 
-        println!("Mappings = {}", mappings);
 
         let mapping_vec = helper_functions::split_string_n(mappings, "?", 1);
 
-        println!("Got mapping vec!");
 
         let endpoint_opt = mapping_vec.get(0);
 
@@ -95,7 +98,6 @@ impl HttpRequest
 
         let empty_string = String::from("");
 
-        println!("About to get parameters!");
         let param_results = helper_functions::get_map_from_string(
             match mapping_vec.get(1)
             {
@@ -120,9 +122,6 @@ impl HttpRequest
             None => String::from(""),
             Some(string) => string.clone()
         };
-
-
-        println!("Header String is {}", header_string);
 
         let headers_opt = helper_functions::get_map_from_string(&header_string, "\n", ":");
 

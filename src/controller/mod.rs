@@ -81,7 +81,7 @@ fn sort_controller(request: &HttpRequest, salt: &oracle::Connection, user: & ora
         }
         else if method.eq(&String::from("POST"))
         {
-            user_controller::new_user_post_mapping(request, user)
+            user_controller::new_user_post_mapping(request, user, salt)
         }
         else
         {

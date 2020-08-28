@@ -14,6 +14,18 @@ pub struct HttpResponse
     body: String
 }
 
+pub fn get_client_respone_using_text(body: String) -> HttpResponse
+{
+    let mut res = HttpResponse::new(http_response_code::HttpResponseCode::new(http_response_code::HttpResponseCodeTypes::ClientErr400));
+
+    let key = String::from("Content-Type");
+    let value = String::from("text/plain; charset=UTF-8");
+    res.add_header(&key, &value);
+    res.set_body(body);
+
+    res
+}
+
 impl HttpResponse
 {
     pub fn new(response_code: http_response_code::HttpResponseCode) -> HttpResponse
