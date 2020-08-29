@@ -37,6 +37,7 @@
 		
 		var username;
 		var initUrl = ${authUrl};
+		var clientUrl = ${clientUrl};
 		function submitUsername() {
 			let xhr = (new XMLHttpRequest() || new ActiveXObject("Microsoft.HTTPRequest"));
 			
@@ -92,8 +93,12 @@
 			
 			let newUrl = window.location.href.indexOf(0, colonSep);
 			console.log("About to Transfer to New User page! At:");
-			console.log("/NewUser/")
-			window.location.href = "/NewUser";
+			console.log("/NewUser/");
+			if(clientUrl){
+				window.location.href = "/NewUser?redirect_uri=" +clientUrl;
+			} else{
+				window.location.href = "/NewUser";
+			}
 		}
 		
 		function blockSubmit() {

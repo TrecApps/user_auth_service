@@ -23,10 +23,19 @@ pub fn new_user_get_mapping(request: &HttpRequest, conn: &oracle::Connection) ->
     let value = String::from("text/html; charset=UTF-8");
     response.add_header(&key, &value);
 
+    let redirect = request.get_param(&String::from("redirect_uri"));
+
+    let client_url = match redirect{
+        None => String::from(""),
+        Some(value) => value.to_string()
+    };
+
     // Update marked fields with specific configuration
     contents = contents.replace("${message}", "Log in to Trec Apps!")
-        .replace("${clientUrl}", "") // Set it to nothing here as User is logging on Directly, but is used if loggingin for a client
+        .replace("${clientUrl}", client_url.as_str()) // Set it to nothing here as User is logging on Directly, but is used if loggingin for a client
         .replace("\"${authUrl}\"", "http://localhost:7878");
+
+    
 
     response.set_body(contents);
 
@@ -119,6 +128,8 @@ pub fn new_user_post_mapping(request: &HttpRequest, conn: &oracle::Connection, s
     let body_vec = helper_functions::split_string_n(&body, " ", 2);
 
     let fields_str = body_vec.get(0);
+
+
 
     match fields_str
     {

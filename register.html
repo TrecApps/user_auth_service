@@ -107,6 +107,8 @@
 				<label>Customize Security Features</label>
 				<input type="checkbox" onclick="setSecurityFeatures(this)" checked>
 
+				<input type="text" value="${clientUrl}" name="redirect_uri" hidden>
+
 				<div id="securityDiv">
 					<label>Password Month Reset (Default 6):</label>
 					<input type="number" name="password_reset" value="6" max="12">
