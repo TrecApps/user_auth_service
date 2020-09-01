@@ -10,6 +10,7 @@ edition = "2018"
 
 threadpool = "1.8.1" # Easy threadpooling
 oracle = "0.3.2"     # Allows us to connect to an Oracle Database
+mysql = "*"          # Allows us to connect to a mysql Database
 
 # Allows use of BCrypt, pasword analyzing, password generation, etc.
 passwords = {version = "3.1.3", features = ["crypto"]}

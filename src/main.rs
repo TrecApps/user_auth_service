@@ -10,6 +10,7 @@ mod controller;
 mod user;
 mod client;
 mod services;
+mod db_driver;
 
 pub mod err_string;
 
